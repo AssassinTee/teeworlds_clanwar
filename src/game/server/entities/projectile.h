@@ -20,6 +20,9 @@ public:
 
 	int GetOwner() const { return m_Owner; }
 	void LoseOwner();
+	
+	bool IsAffected(int ClientID) const;
+	void SetAffected(int ClientID, bool Affected);
 
 	virtual void Reset();
 	virtual void Tick();
@@ -38,6 +41,8 @@ private:
 	float m_Force;
 	int m_StartTick;
 	bool m_Explosive;
+	
+	int64 m_AffectedCharacters;
 };
 
 #endif
