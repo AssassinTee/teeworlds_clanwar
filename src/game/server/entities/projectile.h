@@ -20,6 +20,9 @@ public:
 
 	int GetOwner() const { return m_Owner; }
 	void LoseOwner();
+	
+	bool IsAffected(int ClientID) const;
+	void SetAffected(int ClientID, bool Affected);
 
 	virtual void Reset();
 	virtual void Tick();
