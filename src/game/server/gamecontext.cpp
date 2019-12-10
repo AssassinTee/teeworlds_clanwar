@@ -342,7 +342,7 @@ bool CGameContext::SendCommand(int ChatterClientID, const char *pText)
             if(m_apPlayers[ChatterClientID]->GetTeam() != TEAM_SPECTATORS)
             {
                 if(m_pController->IsGamePaused())
-                    CreateCustomVote(ChatterClientID, "Go", "pause", Server()->ClientName(ChatterClientID));
+                    CreateCustomVote(ChatterClientID, "Go", "pause 5", Server()->ClientName(ChatterClientID));
                 else
                     SendChat(-1, CHAT_ALL, ChatterClientID, "Game is already running");
             }
