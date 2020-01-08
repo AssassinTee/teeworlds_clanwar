@@ -125,6 +125,7 @@ public:
 		VOTE_CANCEL_TIME = 10,
 
 		MIN_SKINCHANGE_CLIENTVERSION = 0x0703,
+		MIN_RACE_CLIENTVERSION = 0x0704,
 	};
 	class CHeap *m_pVoteOptionHeap;
 	CVoteOptionServer *m_pVoteOptionFirst;
@@ -140,7 +141,8 @@ public:
 
 	// network
 	void SendChat(int ChatterClientID, int Mode, int To, const char *pText);
-	bool SendCommand(int ChatterClientID, const char *pText);
+	/*DEPRECATED*/
+	//bool SendCommand(int ChatterClientID, const char *pText);
 	void SendBroadcast(const char *pText, int ClientID);
 	void SendEmoticon(int ClientID, int Emoticon);
 	void SendWeaponPickup(int ClientID, int Weapon);
