@@ -199,12 +199,6 @@ void CGameContext::CreateSound(vec2 Pos, int Sound, int64 Mask)
 
 void CGameContext::SendChat(int ChatterClientID, int Mode, int To, const char *pText)
 {
-    if(Mode == CHAT_ALL && ChatterClientID != -1)
-    {
-        if(SendCommand(ChatterClientID, pText))
-            return;
-    }
-
 	char aBuf[256];
 	if(ChatterClientID >= 0 && ChatterClientID < MAX_CLIENTS)
 		str_format(aBuf, sizeof(aBuf), "%d:%d:%s: %s", ChatterClientID, Mode, Server()->ClientName(ChatterClientID), pText);
@@ -253,6 +247,8 @@ void CGameContext::SendChat(int ChatterClientID, int Mode, int To, const char *p
 	}
 }
 
+/*
+DEPRECATED
 bool CGameContext::SendCommand(int ChatterClientID, const char *pText)
 {
     if(pText[0] == '!' || pText[0] == '/')
@@ -386,7 +382,7 @@ bool CGameContext::SendCommand(int ChatterClientID, const char *pText)
     }
     return false;
 }
-
+*/
 void CGameContext::SendBroadcast(const char* pText, int ClientID)
 {
 	CNetMsg_Sv_Broadcast Msg;
