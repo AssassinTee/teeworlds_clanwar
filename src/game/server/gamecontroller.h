@@ -123,9 +123,21 @@ protected:
 
 	void UpdateGameInfo(int ClientID);
 
-	typedef void (*COMMAND_CALLBACK)(class CPlayer *pPlayer, const char *pArgs);
-
-	//static void Com_Example(class CPlayer *pPlayer, const char *pArgs);
+	typedef void (*COMMAND_CALLBACK)(class IGameController *pGameController, class CPlayer *pPlayer, const char *pArgs);
+	
+	//Commands
+	void ComSendMessageList(std::vector<std::string>& messageList, const int ClientID);
+	static void ComHelp(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	static void ComInfo(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	
+	static void ComGo(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	static void ComStop(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	
+	static void ComRestart(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	static void ComXonX(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	
+	static void ComSwap(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
+	static void ComShuffle(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
 
 	struct CChatCommand 
 	{
@@ -134,6 +146,7 @@ protected:
 		char m_aArgsFormat[16];
 		COMMAND_CALLBACK m_pfnCallback;
 		bool m_Used;
+		bool m_SpecAllowed;
 	};
 
 	class CChatCommands
@@ -149,7 +162,7 @@ protected:
 		CChatCommands();
 
 		// Format: i = int, s = string, p = playername, c = subcommand
-		void AddCommand(const char *pName, const char *pArgsFormat, const char *pHelpText, COMMAND_CALLBACK pfnCallback);
+		void AddCommand(const char *pName, const char *pArgsFormat, const char *pHelpText, COMMAND_CALLBACK pfnCallback, bool specAllowed=true);
 		void RemoveCommand(const char *pName);
 		void SendRemoveCommand(class IServer *pServer, const char *pName, int ID);
 		CChatCommand *GetCommand(const char *pName);

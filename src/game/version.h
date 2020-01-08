@@ -9,4 +9,5 @@
 #define CLIENT_VERSION 0x0704
 #define SETTINGS_FILENAME "settings07"
 static const char GAME_RELEASE_VERSION[8] = "0.7.4";
+#define CLANWAR_VERSION "2.0.0"
 #endif
