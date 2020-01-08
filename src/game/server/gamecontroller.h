@@ -7,6 +7,8 @@
 #include <base/tl/array.h>
 
 #include <generated/protocol.h>
+#include <vector>
+#include <string>
 
 /*
 	Class: Game Controller
@@ -126,7 +128,11 @@ protected:
 	typedef void (*COMMAND_CALLBACK)(class IGameController *pGameController, class CPlayer *pPlayer, const char *pArgs);
 	
 	//Commands
+	//Helper functions
 	void ComSendMessageList(std::vector<std::string>& messageList, const int ClientID);
+	void ComSpecNotAllowed(int ClientID);
+	void ComNotFound(int ClientID);
+	
 	static void ComHelp(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
 	static void ComInfo(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs);
 	

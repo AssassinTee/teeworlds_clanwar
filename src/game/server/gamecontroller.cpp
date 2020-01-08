@@ -3,6 +3,9 @@
 #include <engine/shared/config.h>
 
 #include <game/mapitems.h>
+#include <game/version.h>
+
+#include <sstream>
 
 #include "entities/character.h"
 #include "entities/pickup.h"
@@ -1301,25 +1304,37 @@ void IGameController::OnPlayerCommand(CPlayer *pPlayer, const char *pCommandName
 
 	if(pCommand)
 	{
-		if(pCommand->m_SpecAllowed || pPlayer->GetTeam != TEAM_SPECTATORS)
+		if(pCommand->m_SpecAllowed || pPlayer->GetTeam() != TEAM_SPECTATORS)
 		{
 			pCommand->m_pfnCallback(this, pPlayer, pCommandArgs);
 		}
 		else
 		{
-			ComSpecNotAllowed(this, pPlayer);
+			ComSpecNotAllowed(pPlayer->GetCID());
 		}
 	}
 	else
 	{
-		ComNotFound(this, pPlayer);
+		ComNotFound(pPlayer->GetCID());
 	}
+}
+
+void IGameController::ComSpecNotAllowed(int ClientID)
+{
+	std::vector<std::string> answer = {"Spectator's aren't allowed to use this command"};
+	ComSendMessageList(answer, ClientID);
+}
+
+void IGameController::ComNotFound(int ClientID)
+{
+	std::vector<std::string> answer = {"Command does not exist"};
+	ComSendMessageList(answer, ClientID);
 }
 
 void IGameController::CChatCommands::OnInit()
 {
-	//AddCommand("example", "si", "I am a description", Com_Example);
-	AddCommand("help", "", "how to play", ComHelp);
+	//I reached the command limit, so bye help
+	//AddCommand("help", "", "how to play", ComHelp);
 	AddCommand("info", "", "Show authors and mod description", ComInfo);
 	
 	//stop and go
@@ -1384,27 +1399,80 @@ void IGameController::ComInfo(class IGameController* pGameController, class CPla
 
 void IGameController::ComGo(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
-	
+	if(pGameController->IsGamePaused())
+        pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Go", "pause 5", pGameController->Server()->ClientName(pPlayer->GetCID()));
+    else
+        pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Game is already running");
 }
 
 void IGameController::ComStop(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
-	
+	if(!pGameController->IsGamePaused())
+    {
+        pGameController->GameServer()->Console()->ExecuteLine("pause");
+        char aBuf[128];
+        str_format(aBuf, sizeof(aBuf), "'%s' paused the game!", pGameController->Server()->ClientName(pPlayer->GetCID()));
+        pGameController->GameServer()->SendChat(-1, CHAT_ALL, -1, aBuf);
+    }
+    else
+    {
+        pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Game is already paused");
+    }
 }
 
 void IGameController::ComRestart(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
-	
+	const char *pText = pArgs+1;
+	//only restart
+    if(str_comp(pText, "restart")==0)
+    {
+        pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Restart 10 seconds", "restart 10", pGameController->Server()->ClientName(pPlayer->GetCID()));
+    }
+    else
+    {
+        const char* after_restart = str_startswith(pText, "restart");
+        int seconds = str_toint(after_restart);
+        if(seconds > 0 && seconds <= 60)
+        {
+            char aBuf[16];
+            char bBuf[64];
+            str_format(aBuf, sizeof(aBuf), "restart %d", seconds);
+            str_format(bBuf, sizeof(bBuf), "Restart %d second(s)", seconds);
+            pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), bBuf, aBuf, pGameController->Server()->ClientName(pPlayer->GetCID()));
+        }
+        else
+        {
+			pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Restart only from 1 to 60 seconds!");
+        }
+    }
 }
 
 void IGameController::ComXonX(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
+	//pGameController->GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", pArgs);
+	const char *pText = pArgs+1;
+	if(str_length(pText) >= 4)
+	{
+		int val = (int)(pText[0]-'0');
+        int val2 = (int)(pText[3]-'0');
+
+        if(val >= 1 && val <= 8 && val == val2)
+        {
+			char aBuf[32];
+            char bBuf[16];
+            str_format(aBuf, sizeof(aBuf), "set_player_num %d", 2*val);
+            str_format(bBuf, sizeof(bBuf), "%d on %d", val, val);
+            pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), bBuf, aBuf, pGameController->Server()->ClientName(pPlayer->GetCID()));
+		}
+	}
 }
 
 void IGameController::ComSwap(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
+	pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Swap Teams", "swap_teams", pGameController->Server()->ClientName(pPlayer->GetCID()));
 }
 
 void IGameController::ComShuffle(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
+	pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Shuffle Teams", "shuffle_teams", pGameController->Server()->ClientName(pPlayer->GetCID()));
 }
