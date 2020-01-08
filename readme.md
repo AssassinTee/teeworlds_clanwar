@@ -9,20 +9,22 @@ The Clanwar mod is a mod that supports all vanilla Games like `CTF`, `DM`, `TDM`
 
 The mods are renamed and a `+` symbol is added (`gCTF` -> `gCTF+`).
 
-It allows chatcommands and has some variables (only for Instagib)
+It allows servercommands and has some variables (only for Instagib)
 
-| chatcommand         | desciprtion                   |
+| servercommands      | desciprtion                   |
 | ------------------- | ----------------------------- |
 | `/cmdlist`          | Show all commands             |
 | `/info`             | Show mod info                 |
 | `/restart`          | Call restart vote             |
-| `/stop` or `/pause` | Pause game                    |
-| `/go` or `/start`   | Call vote to resume game      |
+| `/stop`             | Pause game                    |
+| `/go`               | Call vote to resume game      |
 | `/1on1` to `/8on8`  | Call vote to set player limit |
+| `/swap`             | Call vote to swap teams       |
+| `/shuffle`          | Call vote to shuffle teams    |
 
-## server commands/variables
+## variables
 
-| command                     | default | min | max  | description                                        |
+| variable                    | default | min | max  | description                                        |
 | --------------------------- | ------- | --- | ---- | -------------------------------------------------- |
 | sv_grenade_ammo_regen       | 0       | 0   | 1    | Activate grenade spam protection                   |
 | sv_grenade_ammo_regen_time  | 128     | 1   | 2000 | Grenade ammo regeneration time in ms               |
@@ -33,6 +35,8 @@ It allows chatcommands and has some variables (only for Instagib)
 | sv_laser_ammo_regen_time    | 128     | 1   | 2000 | laser ammo regeneration time in ms                 |
 | sv_laser_ammo_regen_num     | 6       | 1   | 10   | Maximum number of lasers if ammo regeneration on   |
 | sv_laser_jump               | 0       | 0   | 1    | Laser jumps (Currently not working!)               |
+| sv_spamprotection           | 1       | 0   | 1    | Toggle spam protection (Thanks to Cuube)           |
+| sv_sprayprotection          | 0       | 0   | 1    | Toggle spray protection (Thanks to Cuube)          |
 | --------------------------- | ------- | --- | ---- | -------------------------------------------------- |
 | commands for training       |         |     |      |                                                    |
 | --------------------------- | ------- | --- | ---- | -------------------------------------------------- |
