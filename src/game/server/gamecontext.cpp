@@ -25,6 +25,8 @@
 //gCTF
 #include "gamemodes/gctf.h"
 #include "gamemodes/ictf.h"
+#include "gamemodes/gdm.h"
+#include "gamemodes/idm.h"
 
 #include "gamecontext.h"
 #include "player.h"
@@ -1734,6 +1736,10 @@ void CGameContext::OnInit()
 		m_pController = new CGameControllerGCTF(this);
 	else if(str_comp_nocase(g_Config.m_SvGametype, "ictf") == 0 || str_comp_nocase(g_Config.m_SvGametype, "ictf+") == 0)
 		m_pController = new CGameControllerICTF(this);
+	else if(str_comp_nocase(g_Config.m_SvGametype, "gdm") == 0 || str_comp_nocase(g_Config.m_SvGametype, "gdm+") == 0)
+		m_pController = new CGameControllerGDM(this);
+	else if(str_comp_nocase(g_Config.m_SvGametype, "idm") == 0 || str_comp_nocase(g_Config.m_SvGametype, "idm+") == 0)
+		m_pController = new CGameControllerIDM(this);
 	else
 		m_pController = new CGameControllerDM(this);
 
