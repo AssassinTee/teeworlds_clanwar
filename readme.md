@@ -22,6 +22,8 @@ It allows servercommands and has some variables (only for Instagib)
 | `/swap`             | Call vote to swap teams       |
 | `/shuffle`          | Call vote to shuffle teams    |
 
+![img](https://i.imgur.com/s4qFQRp.png)
+
 ## variables
 
 | variable                    | default | min | max  | description                                        |
