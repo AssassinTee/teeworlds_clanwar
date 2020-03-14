@@ -56,7 +56,7 @@ IGameController::IGameController(CGameContext *pGameServer)
 
 	m_DefTrainingTeam = TEAM_RED;
 	m_DefTrainingPos = -200;//out of map
-	
+
 	// commands
 	CommandsManager()->OnInit();
 }
@@ -1336,23 +1336,23 @@ void IGameController::CChatCommands::OnInit()
 	//I reached the command limit, so bye help
 	//AddCommand("help", "", "how to play", ComHelp);
 	AddCommand("info", "", "Show authors and mod description", ComInfo);
-	
+
 	//stop and go
 	AddCommand("stop", "", "Pauses the game for everyone", ComStop, false);
 	AddCommand("go", "", "Unpauses the game and starts countdown", ComGo, false);
-	
+
 	//restart
 	AddCommand("restart", "i", "Restart with 1-60 seconds warmup", ComRestart, false);
 	//AddCommand("restart", "", "Restart with 10 seconds warmup", ComRestart);
-	
+
 	//change teams
 	AddCommand("swap", "", "Swap teams", ComSwap, false);
 	AddCommand("shuffle", "", "Shuffle teams", ComShuffle, false);
-	
+
 	//x on x
 	char aDescription[16];
     char aCommand[8];
-                    
+
 	for(int i = 1; i <= 8; ++i)
 	{
 		str_format(aCommand, sizeof(aCommand), "%don%d", i, i);
@@ -1378,8 +1378,8 @@ void IGameController::ComSendMessageList(std::vector<std::string>& messageList, 
 void IGameController::ComHelp(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
 	std::vector<std::string> helplist = {"###Help###",
-		"Kill enemies, capture enemy flag, defend own flag", 
-		"Very easy :D", 
+		"Kill enemies, capture enemy flag, defend own flag",
+		"Very easy :D",
 		"gl hf ^.^"};
 	pGameController->ComSendMessageList(helplist, pPlayer->GetCID());
 }
@@ -1387,8 +1387,8 @@ void IGameController::ComHelp(class IGameController* pGameController, class CPla
 void IGameController::ComInfo(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
 	std::vector<std::string> infolist = {"###Info###",
-		"teeworlds_clanwar by AssassinTee", 
-		"You like it? Give me a Star on GitHub!", 
+		"teeworlds_clanwar by AssassinTee",
+		"You like it? Give me a Star on GitHub!",
 		"https://github.com/AssassinTee/teeworlds_clanwar",
 		"Thanks to Cuube for his contributions!"};
 	std::stringstream ss;
@@ -1431,7 +1431,15 @@ void IGameController::ComRestart(class IGameController* pGameController, class C
     else
     {
         const char* after_restart = str_startswith(pText, "restart");
-        int seconds = str_toint(after_restart);
+        if(*after_restart == ' ')
+            after_restart++;
+        int seconds = 0;
+        for(; *after_restart >= '0' && *after_restart <= '9'; after_restart++)
+        {
+            seconds*= 10;
+            seconds += (int)((*after_restart)-'0');
+        }
+
         if(seconds > 0 && seconds <= 60)
         {
             char aBuf[16];
