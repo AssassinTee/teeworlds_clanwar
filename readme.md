@@ -3,6 +3,7 @@
 [![release version](https://img.shields.io/github/release/AssassinTee/teeworlds_clanwar.svg?style=flat)](https://github.com/AssassinTee/teeworlds_clanwar/releases)
 ![Teeworlds version](https://img.shields.io/badge/Teeworlds-0.7.4-brightgreen.svg)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/AssassinTee/teeworlds_clanwar/issues)
+![unmaintained](https://img.shields.io/maintenance/no/2020)
 
 The Clanwar mod is a mod that supports all vanilla Games like `CTF`, `DM`, `TDM`, `LMS`, `LTS` and some instagib mods like
 `gCTF`, and `iCTF`.
