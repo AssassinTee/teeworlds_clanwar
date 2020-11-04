@@ -1423,36 +1423,53 @@ void IGameController::ComStop(class IGameController* pGameController, class CPla
 void IGameController::ComRestart(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
 {
 	const char *pText = pArgs+1;
-	//only restart
-    if(str_comp(pText, "restart")==0)
-    {
-        pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Restart 10 seconds", "restart 10", pGameController->Server()->ClientName(pPlayer->GetCID()));
-    }
-    else
-    {
-        const char* after_restart = str_startswith(pText, "restart");
-        if(*after_restart == ' ')
-            after_restart++;
-        int seconds = 0;
-        for(; *after_restart >= '0' && *after_restart <= '9'; after_restart++)
-        {
-            seconds*= 10;
-            seconds += (int)((*after_restart)-'0');
-        }
+	int args_len = str_length(pText) -8; // len("restart ")
 
-        if(seconds > 0 && seconds <= 60)
-        {
-            char aBuf[16];
-            char bBuf[64];
-            str_format(aBuf, sizeof(aBuf), "restart %d", seconds);
-            str_format(bBuf, sizeof(bBuf), "Restart %d second(s)", seconds);
-            pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), bBuf, aBuf, pGameController->Server()->ClientName(pPlayer->GetCID()));
-        }
-        else
-        {
-			pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Restart only from 1 to 60 seconds!");
-        }
+	if (!str_startswith(pText, "restart"))
+	{
+		return;
+	}
+
+	//only restart
+    if(!str_comp(pText, "restart") || !str_comp(pText, "restart "))
+    {
+		// (args_len < 1)
+        pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Restart 10 seconds", "restart 10", pGameController->Server()->ClientName(pPlayer->GetCID()));
+		return;
     }
+	
+	if (2 < args_len)
+	{
+		pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Restart only from 1 to 60 seconds!");
+		return;
+	}
+
+	const char* after_restart = str_startswith(pText, "restart ");
+	if (!after_restart)
+	{
+		pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), "Restart 10 seconds", "restart 10", pGameController->Server()->ClientName(pPlayer->GetCID()));
+		return;
+	}
+	
+	int seconds = 0;
+	for(; '0' <= *after_restart && *after_restart <= '9'; after_restart++)
+	{
+		seconds *= 10;
+		seconds += (int)((*after_restart)-'0');
+	}
+
+	if (seconds <= 0 || 60 < seconds)
+	{
+		pGameController->GameServer()->SendChat(-1, CHAT_ALL, pPlayer->GetCID(), "Restart only from 1 to 60 seconds!");
+		return;
+	}
+
+
+	char aBuf[16];
+	char bBuf[64];
+	str_format(aBuf, sizeof(aBuf), "restart %d", seconds);
+	str_format(bBuf, sizeof(bBuf), "Restart %d second(s)", seconds);
+	pGameController->GameServer()->CreateCustomVote(pPlayer->GetCID(), bBuf, aBuf, pGameController->Server()->ClientName(pPlayer->GetCID()));
 }
 
 void IGameController::ComXonX(class IGameController* pGameController, class CPlayer *pPlayer, const char *pArgs)
